@@ -32,14 +32,64 @@
             var graphs = result.package.content[0].graph;
             var getCompNodes = outer => outer.compNodes[0].compNode;
             var getNodeId = node => node.uid[0].$.v;
-            var getNodePosition = node => {
-                var rawPos = node.GUILayout[0].gpos[0].$.v.split(" ");
-                return new Vector3(rawPos[0], rawPos[1], rawPos[2]);
+            var getNodeGui = node => node.GUILayout[0];
+            var getNodePosition = gui => {
+                var rawPos = gui.gpos[0].$.v.split(" ");
+                return new Vector3(parseFloat(rawPos[0]), parseFloat(rawPos[1]), parseFloat(rawPos[2]));
+            };
+            var getNodeParameters = node => {
+                if (node
+                    && node.compImplementation
+                    && node.compImplementation[0].compInstance
+                    && node.compImplementation[0].compInstance[0].parameters) {
+
+                    return node.compImplementation[0].compInstance[0].parameters[0].parameter;
+                }
+                return [];
+            };
+            var getNodeName = node => {
+                if (node
+                    && node.compImplementation
+                    && node.compImplementation[0].compInstance
+                    && node.compImplementation[0].compInstance[0].path
+                    && node.compImplementation[0].compInstance[0].path[0].value) {
+                    return node.compImplementation[0].compInstance[0].path[0].value[0].$.v;
+                }
+                if (node
+                    && node.compImplementation
+                    && node.compImplementation[0].compFilter
+                    && node.compImplementation[0].compFilter[0].filter) {
+                    return node.compImplementation[0].compFilter[0].filter[0].$.v;
+                }
+            };
+
+            var isOutputNode = node => {
+                if (node
+                    && node.compImplementation
+                    && node.compImplementation[0].compOutputBridge
+                    && node.compImplementation[0].compOutputBridge[0].output) {
+                        return true;
+                }
+                return false;
             };
 
             _.forEach(graphs, outer => {
                 _.forEach(getCompNodes(outer), inner => {
-                    var newNode = new Node(getNodeId(inner), getNodePosition(inner));
+                    var nodeGui = getNodeGui(inner);
+                    var newNode = new Node(getNodeId(inner), getNodeName(inner), getNodePosition(nodeGui));
+
+                    newNode.isOutputNode = isOutputNode(inner);
+
+                    if (nodeGui.docked && nodeGui.docked[0].$.v == 1) {
+                        var dockedPos = nodeGui.dockDistance[0].$.v.split(" ");
+                        newNode.isDocked = true;
+                        newNode.dockedPosition = new Vector3(parseFloat(dockedPos[0]), parseFloat(dockedPos[1]));
+                    }
+
+                    _.forEach(getNodeParameters(inner), para => {
+                        newNode.parameters.push(new NodeParameter(para));
+                    });
+
                     var pattern = _.find(patterns, x => x.containsNode(newNode));
                     if (pattern) {
                         pattern.nodes.push(newNode);
@@ -48,16 +98,14 @@
                 });
             });
 
-            // Find OutputNodes from Pattern.Nodes
-
             console.dir(patterns);
             console.log('Done');
         });
     });
 
-    // Run sbsrender.exe to generate images
-    // Map pattern outputs to images
-    // Call API (or save text file) with database
+    // TODO: Run sbsrender.exe to generate images
+    // TODO: Map pattern outputs to images
+    // TODO: Call API (or save text file) with database
 
     class Pattern {
         constructor(name, position, size) {
@@ -76,9 +124,24 @@
     }
 
     class Node {
-        constructor(id, position) {
+        constructor(id, name, position) {
             this.id = id || "000";
+            this.name = name || "Unnamed";
             this.position = position || new Vector3();
+            this.isDocked = false;
+            this.dockedPosition = new Vector3();
+            this.parameters = [];
+            this.isOutputNode = false;
+        }
+    }
+
+    class NodeParameter {
+        constructor(xml) {
+            if (xml == null) {
+                console.error("null xml when making NodeParameter.")
+            }
+            this.xml = xml;
+            this.name = xml.name[0].$.v;
         }
     }
 
