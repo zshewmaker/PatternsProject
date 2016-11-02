@@ -1,0 +1,15 @@
+{
+  "name": "PatternsProject",
+  "version": "0.0.0",
+  "description": "Export Substance Designer patterns from sbs file.",
+  "main": "patternExporter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.16.6",
+    "xml2js": "^0.4.17"
+  }
+}
