@@ -3,7 +3,8 @@
 
     var fs = require('fs'),
         xml2js = require('xml2js'),
-        _ = require('lodash');
+        _ = require('lodash'),
+        spawnSync = require('child_process').spawnSync;
 
     var patterns = [];
 
@@ -47,6 +48,17 @@
                 }
                 return [];
             };
+
+            var isOutputNode = node => {
+                if (node
+                    && node.compImplementation
+                    && node.compImplementation[0].compOutputBridge
+                    && node.compImplementation[0].compOutputBridge[0].output) {
+                    return true;
+                }
+                return false;
+            };
+
             var getNodeName = node => {
                 if (node
                     && node.compImplementation
@@ -61,16 +73,22 @@
                     && node.compImplementation[0].compFilter[0].filter) {
                     return node.compImplementation[0].compFilter[0].filter[0].$.v;
                 }
+                if (isOutputNode(node)) {
+                    return "Output";
+                }
             };
 
-            var isOutputNode = node => {
+            var getConnections = node => {
                 if (node
-                    && node.compImplementation
-                    && node.compImplementation[0].compOutputBridge
-                    && node.compImplementation[0].compOutputBridge[0].output) {
-                        return true;
+                    && node.connexions
+                    && node.connexions[0]) {
+                    return node.connexions[0].connexion;
                 }
-                return false;
+                return [];
+            };
+
+            var getConnectionId = connection => {
+                return connection.connRef[0].value[0].$.v;
             };
 
             _.forEach(graphs, outer => {
@@ -90,6 +108,10 @@
                         newNode.parameters.push(new NodeParameter(para));
                     });
 
+                    _.forEach(getConnections(inner), x => {
+                        newNode.inputs.push(new NodeInput(getConnectionId(x), newNode.id));
+                    });
+
                     var pattern = _.find(patterns, x => x.containsNode(newNode));
                     if (pattern) {
                         pattern.nodes.push(newNode);
@@ -99,13 +121,24 @@
             });
 
             console.dir(patterns);
+
+            // TODO: Run sbsrender.exe to generate images
+            var blah = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe", 
+                [ "render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/" ]);
+            console.log(`stderr: ${blah.stderr.toString()}`);
+            console.log(`stdout: ${blah.stdout.toString()}`);
+
+
+            // TODO: Map pattern outputs to images
+            // TODO: Call API (or save text file) with database
+            if (!fs.existsSync("build_output")) {
+                fs.mkdirSync("build_output");
+            }
+
+            fs.writeFile("build_output/patterns.json", JSON.stringify(patterns));
             console.log('Done');
         });
     });
-
-    // TODO: Run sbsrender.exe to generate images
-    // TODO: Map pattern outputs to images
-    // TODO: Call API (or save text file) with database
 
     class Pattern {
         constructor(name, position, size) {
@@ -132,6 +165,14 @@
             this.dockedPosition = new Vector3();
             this.parameters = [];
             this.isOutputNode = false;
+            this.inputs = [];
+        }
+    }
+
+    class NodeInput {
+        constructor(fromId, toId) {
+            this.fromId = fromId;
+            this.toId = toId;
         }
     }
 
