@@ -18,6 +18,7 @@
     <footer>
         <p>See <a href="https://github.com/zshewmaker/PatternsProject">github</a> to learn the whats and hows of this site.</p>
         <div class="legal">&copy; Azaia LLC</div>
+        <div class="legal">Not affiliated with <a href="https://www.allegorithmic.com/">Allegorithmic</a>.</div>
     </footer>
 
     <script type="text/x-jsrender" id="pattern-template">
@@ -26,6 +27,16 @@
             <ul class="nodes">{{for nodes}}
                 <li class="node {{if isOutputNode}} output{{/if}}{{if isDocked}} docked{{/if}}{{if isFilter}} filter{{/if}}{{if isGenerator}} generator{{/if}}">              
                     <h2>{{:name}}</h2>
+
+                    <div class="connectors">
+                        <ul class="input-list">{{for inputs}}
+                            <li class="input" data-input-from-id="{{:fromId}}"></li>
+                        {{/for}}</ul>
+                        <ul class="output-list">{{for outputs}}
+                            <li class="output" data-output-id="{{:#data}}"></li>
+                        {{/for}}</ul>
+                    </div>
+                    
                     <div class="parameters-content">
                         <h3>Parameters</h3>
                         <ul class="parameter-list">{{for parameters}}
@@ -35,6 +46,7 @@
                             </li>
                         {{/for}}</ul>
                     </div>
+
                     {{if isOutputNode}}
                         <img src="PatternsProject_Simple_Patterns_{{:outputName}}.png" alt="{{:outputName}}"/>
                     {{/if}}

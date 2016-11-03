@@ -123,8 +123,12 @@
                         newNode.parameters.push(new NodeParameter(paraName, paraValue, valueType));
                     });
 
+                    _.forEach(xpath.find(inner, "/compOutputs/compOutput"), output => {
+                        newNode.outputs.push(xpath.evalFirst(output, "/uid", "v"));
+                    });
+
                     _.forEach(getConnections(inner), x => {
-                        newNode.inputs.push(new NodeInput(getConnectionId(x), newNode.id));
+                        newNode.inputs.push(new NodeInput(xpath.evalFirst(x, "/connRef/value", "v"), xpath.evalFirst(x, "/connRefOutput/value", "v"), newNode.id));
                     });
 
                     var pattern = _.find(patterns, x => x.containsNode(newNode));
@@ -179,13 +183,15 @@
             this.inputs = [];
             this.isFilter = false;
             this.isGenerator = false;
+            this.outputs = [];
         }
     }
 
     class NodeInput {
-        constructor(fromId, toId) {
-            this.fromId = fromId;
-            this.toId = toId;
+        constructor(fromNodeId, fromOutputId, toNodeId) {
+            this.fromNodeId = fromNodeId;
+            this.fromOutputId = fromOutputId;
+            this.toNodeId = toNodeId;
         }
     }
 

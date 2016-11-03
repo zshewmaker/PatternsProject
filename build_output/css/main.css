@@ -70,10 +70,10 @@ footer {
   background-color: #202020;
   border: 1px solid #000000;
   float: left;
-  margin: 5px;
-  min-height: 256px;
+  margin: 10px;
+  min-height: 200px;
   padding-bottom: 5px;
-  width: 256px;
+  width: 200px;
 }
 
 .node h2 {
@@ -119,7 +119,7 @@ footer {
 }
 
 .node .parameter-list {
-  margin: 10px;
+  margin: 15px;
 }
 
 .node .parameter {
@@ -132,6 +132,31 @@ footer {
 
 .node .parameter .value {
   display: inline-block;
+}
+
+.node .connectors {
+  position: relative;
+  width: 100%;
+}
+
+.node .input-list {
+  left: -10px;
+  position: absolute;
+}
+
+.node .output-list {
+  right: -10px;
+  position: absolute;
+}
+
+.node .input-list .input,
+.node .output-list .output {
+  background-color: #d0d0d0;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  margin-top: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 footer .legal {
