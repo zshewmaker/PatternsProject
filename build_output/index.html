@@ -1,0 +1,42 @@
+<html>
+
+<head>
+	<title>Patterns Project</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="css/reset.css" rel="stylesheet" />
+	<link href="css/main.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <h1>The Patterns Project</h1>
+    </header>
+	<div class="main-content">
+		<ul class="pattern-list"></ul>
+	</div>
+	<div class="dump"></div>
+
+	<script type="text/x-jsrender" id="pattern-template">
+        <li class="pattern">
+            <h1>{{:name}}</h1>
+            <ul class="nodes">{{for nodes}}
+                <li class="node">              
+                    <h2>{{:name}}</h2>
+                    {{if isOutputNode}}
+                        <img src="PatternsProject_Simple_Patterns_{{:outputName}}.png" alt="{{:outputName}}" width="128" height="128"/>
+                    {{/if}}
+                </li>
+            {{/for}}</ul>
+            <br class="clear-all"/>
+        </li>
+    </script>
+
+	<script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.82/jsrender.min.js"></script>
+	<script src="patterns.js"></script>
+	<script src="js/main.js"></script>
+</body>
+
+</html>

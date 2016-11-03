@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.16.6",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.17",
+    "xml2js-xpath": "^0.7.0"
   }
 }

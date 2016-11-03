@@ -3,15 +3,20 @@
 
     var fs = require('fs'),
         xml2js = require('xml2js'),
+        xpath = require('xml2js-xpath'),
         _ = require('lodash'),
         spawnSync = require('child_process').spawnSync;
 
     var patterns = [];
 
-    var parser = new xml2js.Parser();
-    fs.readFile("TestProject01.xml", (err, data) => {
+    fs.readFile("TestProject01.xml", "utf-8", (err, data) => {
+
+        var parser = new xml2js.Parser();
         parser.parseString(data, (err2, result) => {
-            console.dir(result.package.content[0].graph[0].GUIObjects[0].GUIObject[0].type[0].$.v);
+
+
+            var root = xpath.evalFirst(result, "//package");
+            var graphOutputs = xpath.find(root, "/content/graph/graphOutputs/graphoutput");
 
             // Map comments to Patterns
             var guiObjects = result.package.content[0].graph[0].GUIObjects[0].GUIObject;
@@ -97,6 +102,14 @@
                     var newNode = new Node(getNodeId(inner), getNodeName(inner), getNodePosition(nodeGui));
 
                     newNode.isOutputNode = isOutputNode(inner);
+                    if (newNode.isOutputNode) {
+                        var outputBridgeId = xpath.evalFirst(inner, "/compImplementation/compOutputBridge/output", "v");
+                        _.forEach(graphOutputs, graphOutput => {
+                            if (xpath.evalFirst(graphOutput, "/uid", "v") == outputBridgeId) {
+                                newNode.outputName = xpath.evalFirst(graphOutput, "/identifier", "v");
+                            }
+                        });
+                    }
 
                     if (nodeGui.docked && nodeGui.docked[0].$.v == 1) {
                         var dockedPos = nodeGui.dockDistance[0].$.v.split(" ");
@@ -105,7 +118,10 @@
                     }
 
                     _.forEach(getNodeParameters(inner), para => {
-                        newNode.parameters.push(new NodeParameter(para));
+                        var paraName = xpath.evalFirst(para, "/name", "v");
+                        var valueType = Object.keys(xpath.evalFirst(para, "/paramValue"))[0];
+                        var paraValue = xpath.evalFirst(para, "/paramValue/" + valueType + "/value", "v");
+                        newNode.parameters.push(new NodeParameter(paraName, paraValue, valueType));
                     });
 
                     _.forEach(getConnections(inner), x => {
@@ -116,26 +132,21 @@
                     if (pattern) {
                         pattern.nodes.push(newNode);
                     }
-                    console.dir(newNode)
                 });
             });
 
-            console.dir(patterns);
+            // Run sbsrender.exe to generate images
+            var renderResults = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe",
+                ["render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/"]);
+            console.log(`stderr: ${renderResults.stderr.toString()}`);
+            console.log(`stdout: ${renderResults.stdout.toString()}`);
 
-            // TODO: Run sbsrender.exe to generate images
-            var blah = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe", 
-                [ "render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/" ]);
-            console.log(`stderr: ${blah.stderr.toString()}`);
-            console.log(`stdout: ${blah.stdout.toString()}`);
-
-
-            // TODO: Map pattern outputs to images
-            // TODO: Call API (or save text file) with database
+            // Save text file with database
             if (!fs.existsSync("build_output")) {
                 fs.mkdirSync("build_output");
             }
 
-            fs.writeFile("build_output/patterns.json", JSON.stringify(patterns));
+            fs.writeFile("build_output/patterns.js", "var patternsDB = " + JSON.stringify(patterns) + ";");
             console.log('Done');
         });
     });
@@ -165,6 +176,7 @@
             this.dockedPosition = new Vector3();
             this.parameters = [];
             this.isOutputNode = false;
+            this.outputName = null;
             this.inputs = [];
         }
     }
@@ -177,12 +189,10 @@
     }
 
     class NodeParameter {
-        constructor(xml) {
-            if (xml == null) {
-                console.error("null xml when making NodeParameter.")
-            }
-            this.xml = xml;
-            this.name = xml.name[0].$.v;
+        constructor(name, value, valueType) {
+            this.name = name || "Unnamed";
+            this.value = value || 0;
+            this.valueType = valueType || "constantValueInt32";
         }
     }
 

@@ -1,0 +1,55 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 13px;
+}
+
+body {
+  background-color: #202020;
+  color: #eeeeee;
+  font-family: 'Roboto', sans-serif;
+  margin: 20px;
+}
+
+header h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 50px 0;
+  text-align: center;
+}
+
+.clear-all {
+  clear: both;
+}
+
+.main-content {
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+.pattern {
+  background-color: #303030;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+.pattern h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.nodes {
+  margin: 10px;
+}
+
+.node {
+  border: 1px solid #909090;
+  float: left;
+  height: 160px;
+  width: 160px;
+}
