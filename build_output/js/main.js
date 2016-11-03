@@ -2,7 +2,6 @@
 (function ($, _) {
     "use strict";
 
-    var dump = $(".dump");
     console.dir(patternsDB);
 
     var patternTemplate = $.templates("#pattern-template");

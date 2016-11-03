@@ -18,8 +18,20 @@ body {
 header h1 {
   font-size: 4rem;
   font-weight: bold;
-  margin: 50px 0;
+  margin: 50px 0 0 0;
   text-align: center;
+}
+
+header h2 {
+  font-style: italic;
+  font-size: .9rem;
+  font-weight: 500;
+  margin: 20px 0 50px 0;
+  text-align: center;
+}
+
+header a {
+  color: eeeeee;
 }
 
 .clear-all {
@@ -28,19 +40,21 @@ header h1 {
 
 .main-content {
   margin: 0 auto;
-  max-width: 900px;
+  max-width: 66%;
+  min-width: 1024px;
 }
 
 .pattern {
   background-color: #303030;
-  margin-bottom: 30px;
-  padding: 10px;
+  margin-bottom: 80px;
+  padding: 40px 20px;
 }
 
 .pattern h1 {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 20px;
+  margin-left: 15px;
 }
 
 .nodes {
@@ -48,8 +62,71 @@ header h1 {
 }
 
 .node {
-  border: 1px solid #909090;
+  background-color: #202020;
+  border: 1px solid #000000;
   float: left;
-  height: 160px;
-  width: 160px;
+  margin: 5px;
+  min-height: 256px;
+  padding-bottom: 5px;
+  width: 256px;
+}
+
+.node h2 {
+  background-color: #202020;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  padding: 5px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.node.output h2 {
+  background-color: #6e6c7f;
+}
+
+.node.filter h2 {
+  background-color: #878787;
+  color: #000000;
+}
+
+.node.generator h2 {
+  background-color: #872024;
+}
+
+.node.docked h2 {
+  background-color: #4a577b;
+}
+
+.node img {
+  display: block;
+  height: 128px;
+  margin: 0 auto;
+  margin-top: 40px;
+  width: 128px;
+}
+
+.node h3 {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.node .parameter-list {
+  margin: 10px;
+}
+
+.node .parameter {
+  margin-bottom: 5px;
+}
+
+.node .parameter strong {
+}
+
+.node .parameter strong::after {
+  content: ':';
+}
+
+.node .parameter .value {
+  display: inline-block;
 }

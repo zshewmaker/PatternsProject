@@ -9,7 +9,7 @@
 
     var patterns = [];
 
-    fs.readFile("TestProject01.xml", "utf-8", (err, data) => {
+    fs.readFile("PatternsProject.sbs", "utf-8", (err, data) => {
 
         var parser = new xml2js.Parser();
         parser.parseString(data, (err2, result) => {
@@ -64,19 +64,16 @@
                 return false;
             };
 
+            var isGenerator = node => xpath.evalFirst(node, "/compImplementation/compInstance") != null;
+            var isFilter = node => xpath.evalFirst(node, "/compImplementation/compFilter") != null;
+
             var getNodeName = node => {
-                if (node
-                    && node.compImplementation
-                    && node.compImplementation[0].compInstance
-                    && node.compImplementation[0].compInstance[0].path
-                    && node.compImplementation[0].compInstance[0].path[0].value) {
-                    return node.compImplementation[0].compInstance[0].path[0].value[0].$.v;
+                if (isGenerator(node)) {
+                        var rawValue = xpath.evalFirst(node, "/compImplementation/compInstance/path/value", "v");
+                        return rawValue.replace("_", " ").substring(6, rawValue.search(/\?dependency/i));
                 }
-                if (node
-                    && node.compImplementation
-                    && node.compImplementation[0].compFilter
-                    && node.compImplementation[0].compFilter[0].filter) {
-                    return node.compImplementation[0].compFilter[0].filter[0].$.v;
+                if (isFilter(node)) {
+                    return  xpath.evalFirst(node, "/compImplementation/compFilter/filter", "v");
                 }
                 if (isOutputNode(node)) {
                     return "Output";
@@ -100,6 +97,8 @@
                 _.forEach(getCompNodes(outer), inner => {
                     var nodeGui = getNodeGui(inner);
                     var newNode = new Node(getNodeId(inner), getNodeName(inner), getNodePosition(nodeGui));
+                    newNode.isFilter = isFilter(inner);
+                    newNode.isGenerator = isGenerator(inner);
 
                     newNode.isOutputNode = isOutputNode(inner);
                     if (newNode.isOutputNode) {
@@ -118,7 +117,7 @@
                     }
 
                     _.forEach(getNodeParameters(inner), para => {
-                        var paraName = xpath.evalFirst(para, "/name", "v");
+                        var paraName = xpath.evalFirst(para, "/name", "v").replace("_", " ");
                         var valueType = Object.keys(xpath.evalFirst(para, "/paramValue"))[0];
                         var paraValue = xpath.evalFirst(para, "/paramValue/" + valueType + "/value", "v");
                         newNode.parameters.push(new NodeParameter(paraName, paraValue, valueType));
@@ -178,6 +177,8 @@
             this.isOutputNode = false;
             this.outputName = null;
             this.inputs = [];
+            this.isFilter = false;
+            this.isGenerator = false;
         }
     }
 

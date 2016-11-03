@@ -10,20 +10,29 @@
 <body>
     <header>
         <h1>The Patterns Project</h1>
+        <h2>A catalog of <a href="https://www.allegorithmic.com/products/substance-designer">Substance Designer</a> patterns.</h2>
     </header>
 	<div class="main-content">
 		<ul class="pattern-list"></ul>
 	</div>
-	<div class="dump"></div>
 
 	<script type="text/x-jsrender" id="pattern-template">
         <li class="pattern">
             <h1>{{:name}}</h1>
             <ul class="nodes">{{for nodes}}
-                <li class="node">              
+                <li class="node {{if isOutputNode}} output{{/if}}{{if isDocked}} docked{{/if}}{{if isFilter}} filter{{/if}}{{if isGenerator}} generator{{/if}}">              
                     <h2>{{:name}}</h2>
+                    <div class="parameters-content">
+                        <h3>Parameters</h3>
+                        <ul class="parameter-list">{{for parameters}}
+                            <li class="parameter">
+                                <strong>{{:name}}</strong>
+                                <div class="value">{{:value}}</div>
+                            </li>
+                        {{/for}}</ul>
+                    </div>
                     {{if isOutputNode}}
-                        <img src="PatternsProject_Simple_Patterns_{{:outputName}}.png" alt="{{:outputName}}" width="128" height="128"/>
+                        <img src="PatternsProject_Simple_Patterns_{{:outputName}}.png" alt="{{:outputName}}"/>
                     {{/if}}
                 </li>
             {{/for}}</ul>
