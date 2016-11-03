@@ -1,10 +1,10 @@
 <html>
 
 <head>
-	<title>Patterns Project</title>
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<link href="css/reset.css" rel="stylesheet" />
-	<link href="css/main.css" rel="stylesheet" />
+    <title>The Patterns Project</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -12,11 +12,15 @@
         <h1>The Patterns Project</h1>
         <h2>A catalog of <a href="https://www.allegorithmic.com/products/substance-designer">Substance Designer</a> patterns.</h2>
     </header>
-	<div class="main-content">
-		<ul class="pattern-list"></ul>
-	</div>
+    <div class="main-content">
+        <ul class="pattern-list"></ul>
+    </div>
+    <footer>
+        <p>See <a href="https://github.com/zshewmaker/PatternsProject">github</a> to learn the whats and hows of this site.</p>
+        <div class="legal">&copy; Azaia LLC</div>
+    </footer>
 
-	<script type="text/x-jsrender" id="pattern-template">
+    <script type="text/x-jsrender" id="pattern-template">
         <li class="pattern">
             <h1>{{:name}}</h1>
             <ul class="nodes">{{for nodes}}
@@ -39,13 +43,12 @@
             <br class="clear-all"/>
         </li>
     </script>
-
-	<script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-		crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.82/jsrender.min.js"></script>
-	<script src="patterns.js"></script>
-	<script src="js/main.js"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.82/jsrender.min.js"></script>
+    <script src="patterns.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
