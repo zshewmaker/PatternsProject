@@ -15,6 +15,10 @@ body {
   margin: 20px;
 }
 
+a {
+  color: #eeeeee;
+}
+
 header h1 {
   font-size: 4rem;
   font-weight: bold;
@@ -38,7 +42,8 @@ header a {
   clear: both;
 }
 
-.main-content {
+.main-content,
+footer {
   margin: 0 auto;
   max-width: 66%;
   min-width: 1024px;
@@ -65,10 +70,10 @@ header a {
   background-color: #202020;
   border: 1px solid #000000;
   float: left;
-  margin: 5px;
-  min-height: 256px;
+  margin: 10px;
+  min-height: 200px;
   padding-bottom: 5px;
-  width: 256px;
+  width: 200px;
 }
 
 .node h2 {
@@ -96,6 +101,7 @@ header a {
 
 .node.docked h2 {
   background-color: #4a577b;
+  color: #eeeeee;
 }
 
 .node img {
@@ -113,14 +119,11 @@ header a {
 }
 
 .node .parameter-list {
-  margin: 10px;
+  margin: 15px;
 }
 
 .node .parameter {
   margin-bottom: 5px;
-}
-
-.node .parameter strong {
 }
 
 .node .parameter strong::after {
@@ -129,4 +132,34 @@ header a {
 
 .node .parameter .value {
   display: inline-block;
+}
+
+.node .connectors {
+  position: relative;
+  width: 100%;
+}
+
+.node .input-list {
+  left: -10px;
+  position: absolute;
+}
+
+.node .output-list {
+  right: -10px;
+  position: absolute;
+}
+
+.node .input-list .input,
+.node .output-list .output {
+  background-color: #d0d0d0;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  margin-top: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+footer .legal {
+  font-size: .8rem;
+  margin: 10px 0;
 }
