@@ -42,6 +42,10 @@ header a {
   clear: both;
 }
 
+canvas.cables {
+  position: absolute;
+}
+
 .main-content,
 footer {
   margin: 0 auto;

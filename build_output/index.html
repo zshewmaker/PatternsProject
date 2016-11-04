@@ -12,11 +12,13 @@
         <h1>The Patterns Project</h1>
         <h2>A catalog of <a href="https://www.allegorithmic.com/products/substance-designer">Substance Designer</a> patterns.</h2>
     </header>
+
     <div class="main-content">
         <ul class="pattern-list"></ul>
     </div>
+
     <footer>
-        <p>See <a href="https://github.com/zshewmaker/PatternsProject">github</a> to learn the whats and hows of this site.</p>
+        <p>See <a href="https://github.com/zshewmaker/PatternsProject">github</a> to learn the whats and hows of this site. <a href="https://twitter.com/Zknet">Contact me.</a></p>
         <div class="legal">&copy; Azaia LLC</div>
         <div class="legal">Not affiliated with <a href="https://www.allegorithmic.com/">Allegorithmic</a>.</div>
     </footer>
@@ -24,13 +26,14 @@
     <script type="text/x-jsrender" id="pattern-template">
         <li class="pattern">
             <h1>{{:name}}</h1>
+            <canvas id="canvas-{{:id}}" class="cables"></canvas>
             <ul class="nodes">{{for nodes}}
                 <li class="node {{if isOutputNode}} output{{/if}}{{if isDocked}} docked{{/if}}{{if isFilter}} filter{{/if}}{{if isGenerator}} generator{{/if}}">              
                     <h2>{{:name}}</h2>
 
                     <div class="connectors">
                         <ul class="input-list">{{for inputs}}
-                            <li class="input" data-input-from-id="{{:fromId}}"></li>
+                            <li class="input" data-input-from-id="{{:fromOutputId}}"></li>
                         {{/for}}</ul>
                         <ul class="output-list">{{for outputs}}
                             <li class="output" data-output-id="{{:#data}}"></li>
@@ -55,13 +58,14 @@
             <br class="clear-all"/>
         </li>
     </script>
-    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
+    
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.82/jsrender.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/16.7.3/jcanvas.js"></script>
     <script src="patterns.js"></script>
     <script src="js/main.js"></script>
-    
+
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -27,6 +27,7 @@
                     var size = inner.GUILayout[0].size[0].$.v.split(" ");
 
                     var newPattern = new Pattern(
+                        xpath.evalFirst(inner, "/uid", "v"),
                         inner.title[0].$.v,
                         new Vector3(parseFloat(position[0]), parseFloat(position[1]), parseFloat(position[2])),
                         new Vector3(parseFloat(size[0]), parseFloat(size[1])));
@@ -155,7 +156,8 @@
     });
 
     class Pattern {
-        constructor(name, position, size) {
+        constructor(id, name, position, size) {
+            this.id = id || "000";
             this.name = name || "Unnamed";
             this.position = position || new Vector3();
             this.size = size || new Vector3();
