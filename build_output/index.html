@@ -24,21 +24,20 @@
     </footer>
 
     <script type="text/x-jsrender" id="pattern-template">
-        <li class="pattern">
+        <li class="pattern" data-pattern-id="{{:id}}">
             <h1>{{:name}}</h1>
             <canvas id="canvas-{{:id}}" class="cables"></canvas>
-            <ul class="nodes">{{for nodes}}
-                <li class="node {{if isOutputNode}} output{{/if}}{{if isDocked}} docked{{/if}}{{if isFilter}} filter{{/if}}{{if isGenerator}} generator{{/if}}">              
-                    <h2>{{:name}}</h2>
-
+            <ul class="node-list">{{for nodes}}
+                <li class="node {{if isOutputNode}} output{{/if}}{{if isDocked}} docked{{/if}}{{if isFilter}} filter{{/if}}{{if isGenerator}} generator{{/if}}" data-node-id="{{:id}}">
                     <div class="connectors">
                         <ul class="input-list">{{for inputs}}
-                            <li class="input" data-input-from-id="{{:fromOutputId}}"></li>
+                            <li class="input" data-input-from-id="{{:fromOutputId}}" data-input-from-node-id="{{:fromNodeId}}"></li>
                         {{/for}}</ul>
                         <ul class="output-list">{{for outputs}}
                             <li class="output" data-output-id="{{:#data}}"></li>
                         {{/for}}</ul>
                     </div>
+                    <h2>{{:name}}</h2>
                     
                     <div class="parameters-content">
                         <h3>Parameters</h3>

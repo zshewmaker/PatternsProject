@@ -45,12 +45,11 @@
                 return new Vector3(parseFloat(rawPos[0]), parseFloat(rawPos[1]), parseFloat(rawPos[2]));
             };
             var getNodeParameters = node => {
-                if (node
-                    && node.compImplementation
-                    && node.compImplementation[0].compInstance
-                    && node.compImplementation[0].compInstance[0].parameters) {
-
-                    return node.compImplementation[0].compInstance[0].parameters[0].parameter;
+                if (isGenerator(node)) {
+                    return xpath.find(node, "/compImplementation/compInstance/parameters/parameter");
+                }
+                if (isFilter(node)) {
+                    return xpath.find(node, "/compImplementation/compFilter/parameters/parameter");
                 }
                 return [];
             };
