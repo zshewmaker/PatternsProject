@@ -85,7 +85,7 @@ footer {
 
 .node h2 {
   background-color: #202020;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   margin-bottom: 5px;
   overflow: hidden;
@@ -114,22 +114,15 @@ footer {
   color: #eeeeee;
 }
 
-.node.docked .parameters-content {
-  display: none;
-}
-
 .node.docked {
   border-bottom-right-radius: 25px;
   border-top-right-radius: 25px;
-  min-height: 50px;
-  width: 100px;
 }
 
 .node img {
   display: block;
-  height: 128px;
   margin: 0 auto;
-  width: 128px;
+  width: 100%;
 }
 
 .node h3 {
@@ -139,6 +132,10 @@ footer {
 }
 
 .node .parameters-content {
+  display: block;
+}
+
+.node.docked .parameters-content {
   display: none;
 }
 
@@ -165,7 +162,7 @@ footer {
 
 .node .connectors .input-list,
 .node .connectors .output-list {
-  top: 20px;
+  top: 15px;
 }
 
 .node.docked .connectors .input-list {
@@ -190,9 +187,9 @@ footer {
   background-color: #d0d0d0;
   border: 1px solid #000000;
   border-radius: 50%;
-  margin-top: 20px;
-  width: 20px;
-  height: 20px;
+  margin-top: 10px;
+  width: 15px;
+  height: 15px;
 }
 
 footer .legal {

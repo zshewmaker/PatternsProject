@@ -69,11 +69,11 @@
 
             var getNodeName = node => {
                 if (isGenerator(node)) {
-                        var rawValue = xpath.evalFirst(node, "/compImplementation/compInstance/path/value", "v");
-                        return rawValue.replace("_", " ").substring(6, rawValue.search(/\?dependency/i));
+                    var rawValue = xpath.evalFirst(node, "/compImplementation/compInstance/path/value", "v");
+                    return rawValue.replace("_", " ").substring(6, rawValue.search(/\?dependency/i));
                 }
                 if (isFilter(node)) {
-                    return  xpath.evalFirst(node, "/compImplementation/compFilter/filter", "v");
+                    return xpath.evalFirst(node, "/compImplementation/compFilter/filter", "v");
                 }
                 if (isOutputNode(node)) {
                     return "Output";
@@ -113,7 +113,8 @@
                     if (nodeGui.docked && nodeGui.docked[0].$.v == 1) {
                         var dockedPos = nodeGui.dockDistance[0].$.v.split(" ");
                         newNode.isDocked = true;
-                        newNode.dockedPosition = new Vector3(parseFloat(dockedPos[0]), parseFloat(dockedPos[1]));
+                        var dockedPosition = new Vector3(newNode.position.x + parseFloat(dockedPos[0]), newNode.position.y + parseFloat(dockedPos[1]));
+                        newNode.position = dockedPosition;
                     }
 
                     _.forEach(getNodeParameters(inner), para => {
@@ -134,6 +135,9 @@
                     var pattern = _.find(patterns, x => x.containsNode(newNode));
                     if (pattern) {
                         pattern.nodes.push(newNode);
+                    } else {
+                        console.error("stray node");
+                        console.dir(newNode);
                     }
                 });
             });
