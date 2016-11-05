@@ -42,6 +42,14 @@ header a {
   clear: both;
 }
 
+#tooltip {
+  background-color: #202020;
+  border: 1px solid #878787;
+  display: none;
+  position: absolute;
+  z-index: 1000;
+}
+
 canvas.cables {
   position: absolute;
   z-index: 100;
@@ -81,6 +89,7 @@ footer {
   padding-bottom: 5px;
   position: absolute;
   width: 150px;
+  z-index: 200;
 }
 
 .node h2 {
@@ -122,6 +131,7 @@ footer {
 .node img {
   display: block;
   margin: 0 auto;
+  overflow: visible;
   width: 100%;
 }
 
@@ -132,7 +142,7 @@ footer {
 }
 
 .node .parameters-content {
-  display: block;
+  display: none;
 }
 
 .node.docked .parameters-content {
@@ -143,16 +153,25 @@ footer {
   margin: 15px;
 }
 
-.node .parameter {
+.parameters-content .parameter {
   margin-bottom: 5px;
 }
 
-.node .parameter strong::after {
+.parameters-content .parameter strong::after {
   content: ':';
 }
 
-.node .parameter .value {
+.parameters-content .parameter .value {
   display: inline-block;
+}
+
+#tooltip .parameters-content {
+  padding: 10px;
+  white-space: nowrap;
+}
+
+#tooltip .parameters-content h3 {
+  text-align: center;
 }
 
 .node .connectors {
@@ -168,6 +187,7 @@ footer {
 .node.docked .connectors .input-list {
   top: -4px;
 }
+
 .node.docked .connectors .output-list {
   display: none;
 }
@@ -175,6 +195,12 @@ footer {
 .node .connectors .input-list {
   left: -10px;
   position: absolute;
+}
+
+.node .connectors .input-list .input-name {
+  font-size: .8rem;
+  padding-left: 20px;
+  text-transform: lowercase;
 }
 
 .node .connectors .output-list {

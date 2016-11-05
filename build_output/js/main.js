@@ -1,8 +1,8 @@
 
-(function ($, _) {
+(function($, _) {
     "use strict";
 
-    var drawConnections = function () {
+    var drawConnections = function() {
         var canvasXOffset = 8,
             canvasYOffset = 9;
 
@@ -42,7 +42,7 @@
                 } else {
                     $node.css("left", positionModifier(node.position.x - leftPositionModifier - pattern.position.x) + "px");
                     $node.css("top", positionModifier(node.position.y - pattern.position.y) + "px");
-                    
+
                     $node.css("width", sizeModifier(64) + "px");
                     $node.css("min-height", sizeModifier(32) + "px");
                     $node.find("h2").css("height", sizeModifier(16) + "px")
@@ -90,5 +90,37 @@
     drawConnections();
 
     $(window).resize(() => drawConnections());
+
+    var $tooltip = $("#tooltip");
+    var handleMouseLeave = () => {
+        var timeoutId = setTimeout(() => $tooltip.fadeOut("slow"), 650);
+        $tooltip.data("timeoutId", timeoutId);
+    };
+
+    $(".output img").mouseenter((e) => {
+        var $img = $(e.target)
+        clearTimeout($tooltip.data("timeoutId"));
+
+        $tooltip.empty()
+            .append("<img src='" + $img.attr("src") + "' data/>")
+            .css("left", e.pageX - 256 + "px")
+            .css("top", e.pageY + "px")
+            .fadeIn("slow");
+    }).mouseleave(handleMouseLeave);
+
+    $(".node").not(".output").mouseenter((e) => {
+        var $node = $(e.target)
+        clearTimeout($tooltip.data("timeoutId"));
+
+        $tooltip.empty()
+            .append($node.find(".parameters-content").clone())
+            .css("left", e.pageX + "px")
+            .css("top", e.pageY + "px")
+            .fadeIn("slow");
+    }).mouseleave(handleMouseLeave);
+
+    $tooltip.mouseenter(() =>{
+        clearTimeout($tooltip.data("timeoutId"));
+    }).mouseleave(handleMouseLeave);
 
 })($, _);

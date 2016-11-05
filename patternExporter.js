@@ -55,10 +55,7 @@
             };
 
             var isOutputNode = node => {
-                if (node
-                    && node.compImplementation
-                    && node.compImplementation[0].compOutputBridge
-                    && node.compImplementation[0].compOutputBridge[0].output) {
+                if (xpath.evalFirst(node, "/compImplementation/compOutputBridge")) {
                     return true;
                 }
                 return false;
@@ -129,7 +126,9 @@
                     });
 
                     _.forEach(getConnections(inner), x => {
-                        newNode.inputs.push(new NodeInput(xpath.evalFirst(x, "/connRef/value", "v"), xpath.evalFirst(x, "/connRefOutput/value", "v"), newNode.id));
+                        var inputName = xpath.evalFirst(x, "/identifier", "v");
+                        inputName = inputName.match("^input") ? "" : inputName;
+                        newNode.inputs.push(new NodeInput(xpath.evalFirst(x, "/connRef/value", "v"), xpath.evalFirst(x, "/connRefOutput/value", "v"), newNode.id, inputName));
                     });
 
                     var pattern = _.find(patterns, x => x.containsNode(newNode));
@@ -193,10 +192,11 @@
     }
 
     class NodeInput {
-        constructor(fromNodeId, fromOutputId, toNodeId) {
+        constructor(fromNodeId, fromOutputId, toNodeId, name) {
             this.fromNodeId = fromNodeId;
             this.fromOutputId = fromOutputId;
             this.toNodeId = toNodeId;
+            this.name = name || "";
         }
     }
 
