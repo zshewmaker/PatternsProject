@@ -6,13 +6,13 @@
         vector3 = require('./vector3');
 
     // Map Nodes included in Pattern as property of Pattern
-    var getCompNodes = outer => outer.compNodes[0].compNode;
     var getNodeId = node => node.uid[0].$.v;
     var getNodeGui = node => node.GUILayout[0];
     var getNodePosition = gui => {
         var rawPos = xpath.evalFirst(gui, "/gpos", "v").split(" ");
         return vector3.create(parseFloat(rawPos[0]), parseFloat(rawPos[1]), parseFloat(rawPos[2]));
     };
+
     var getNodeParameters = node => {
         if (isGenerator(node)) {
             return xpath.find(node, "/compImplementation/compInstance/parameters/parameter");
@@ -47,10 +47,9 @@
     };
 
     var getConnections = node => {
-        if (node
-            && node.connexions
-            && node.connexions[0]) {
-            return node.connexions[0].connexion;
+        var connections = xpath.find(node, "/connexions/connexion");
+        if (connections.length > 0) {
+            return connections;
         }
         return [];
     };
@@ -60,7 +59,7 @@
     };
 
     function create(rawData, patterns) {
-        _.forEach(getCompNodes(rawData), inner => {
+        _.forEach(rawData.compNodes[0].compNode, inner => {
             var nodeGui = getNodeGui(inner);
             var newNode = new Node(getNodeId(inner), getNodeName(inner), getNodePosition(nodeGui));
             newNode.isFilter = isFilter(inner);
@@ -70,6 +69,7 @@
             if (newNode.isOutputNode) {
                 var outputBridgeId = xpath.evalFirst(inner, "/compImplementation/compOutputBridge/output", "v");
                 var graphOutputs = xpath.find(rawData, "/graphOutputs/graphoutput");
+
                 _.forEach(graphOutputs, graphOutput => {
                     if (xpath.evalFirst(graphOutput, "/uid", "v") == outputBridgeId) {
                         newNode.outputName = xpath.evalFirst(graphOutput, "/identifier", "v");

@@ -13,8 +13,7 @@
         xpath = require('xml2js-xpath'),
         _ = require('lodash'),
         generateImages = require('./imageGenerator').generateImages,
-        createPatterns = require('./pattern').createAll,
-        createNode = require("./designerNode").create;
+        createPatterns = require('./pattern').createAll;
 
     var patterns = [];
 
@@ -24,10 +23,6 @@
         parser.parseString(data, (err2, result) => {
 
             patterns = createPatterns(result);
-
-            _.forEach(xpath.find(result, "//package/content/graph"), graph => {
-                createNode(graph, patterns);
-            });
 
             generateImages(imageOutputPath, sbsRenderPath, substanceSbsar);
             fs.writeFile(jsonOutputPath, "var patternsDB = " + JSON.stringify(patterns) + ";");

@@ -4,7 +4,8 @@
     var xml2js = require('xml2js'),
         xpath = require('xml2js-xpath'),
         _ = require('lodash'),
-        vector3 = require('./vector3');
+        vector3 = require('./vector3'),
+        createNode = require("./designerNode").create;
 
     function create(rawData) {
         var position = xpath.evalFirst(rawData, "/GUILayout/gpos", "v").split(" ");
@@ -20,12 +21,18 @@
     function createAll(rawData) {
         var patterns = [];
         var guiObjects = xpath.find(rawData, "//package/content/graph/GUIObjects/GUIObject");
+
         _.forEach(guiObjects, inner => {
             if (xpath.evalFirst(inner, "/type", "v") == "COMMENT" && xpath.evalFirst(inner, "/isFrameVisible", "v") == 1) {
                 var newPattern = create(inner);
                 patterns.push(newPattern);
             }
         });
+
+        _.forEach(xpath.find(rawData, "//package/content/graph"), graph => {
+            createNode(graph, patterns);
+        });
+
         return patterns;
     }
 
