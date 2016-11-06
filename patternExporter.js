@@ -141,16 +141,16 @@
                 });
             });
 
-            // Run sbsrender.exe to generate images
-            var renderResults = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe",
-                ["render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/"]);
-            console.log(`stderr: ${renderResults.stderr.toString()}`);
-            console.log(`stdout: ${renderResults.stdout.toString()}`);
-
-            // Save text file with database
-            if (!fs.existsSync("build_output")) {
-                fs.mkdirSync("build_output");
-            }
+            fs.readdir("./build_output/generated_images/", (err, files) => {
+                _.forEach(files, file => {
+                    fs.unlinkSync("./build_output/generated_images/" + file);
+                });
+                
+                var renderResults = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe",
+                    ["render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/generated_images/"]);
+                console.log(`stderr: ${renderResults.stderr.toString()}`);
+                console.log(`stdout: ${renderResults.stdout.toString()}`);
+            });
 
             fs.writeFile("build_output/patterns.js", "var patternsDB = " + JSON.stringify(patterns) + ";");
             console.log('Done');
