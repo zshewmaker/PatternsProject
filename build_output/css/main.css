@@ -65,8 +65,8 @@ footer {
 .pattern {
   background-color: #303030;
   margin-bottom: 80px;
-  min-height: 700px;
-  padding: 40px 20px;
+  min-height: 600px;
+  padding: 40px 20px 0 20px;
   position: relative;
 }
 

@@ -13,6 +13,16 @@
         return vector3.create(parseFloat(rawPos[0]), parseFloat(rawPos[1]), parseFloat(rawPos[2]));
     };
 
+    var isOutputNode = node => xpath.evalFirst(node, "/compImplementation/compOutputBridge") != null;
+    var isGenerator = node => xpath.evalFirst(node, "/compImplementation/compInstance") != null;
+    var isFilter = node => xpath.evalFirst(node, "/compImplementation/compFilter") != null;
+    var isBitmap = node => {
+        if (isFilter(node)) {
+            return xpath.evalFirst(node, "/compImplementation/compFilter/filter", "v") == "bitmap";
+        }
+        return false;
+    };
+
     var getNodeParameters = node => {
         if (isGenerator(node)) {
             return xpath.find(node, "/compImplementation/compInstance/parameters/parameter");
@@ -22,16 +32,6 @@
         }
         return [];
     };
-
-    var isOutputNode = node => {
-        if (xpath.evalFirst(node, "/compImplementation/compOutputBridge")) {
-            return true;
-        }
-        return false;
-    };
-
-    var isGenerator = node => xpath.evalFirst(node, "/compImplementation/compInstance") != null;
-    var isFilter = node => xpath.evalFirst(node, "/compImplementation/compFilter") != null;
 
     var getNodeName = node => {
         if (isGenerator(node)) {
@@ -58,17 +58,30 @@
         return connection.connRef[0].value[0].$.v;
     };
 
-    function create(rawData, patterns) {
-        _.forEach(rawData.compNodes[0].compNode, inner => {
+    function create(graph, patterns, rawData) {
+        var resources = xpath.find(rawData, "//package/content/group/content/resource");
+
+        _.forEach(graph.compNodes[0].compNode, inner => {
             var nodeGui = getNodeGui(inner);
             var newNode = new Node(getNodeId(inner), getNodeName(inner), getNodePosition(nodeGui));
+
             newNode.isFilter = isFilter(inner);
             newNode.isGenerator = isGenerator(inner);
-
+            newNode.isBitmap = isBitmap(inner);
             newNode.isOutputNode = isOutputNode(inner);
+
+            if (newNode.isBitmap) {
+                _.forEach(resources, resource => {
+                    var filename = xpath.evalFirst(resource, "/identifier", "v");
+                    if (xpath.evalFirst(inner, "/compImplementation/compFilter/parameters/parameter/paramValue/constantValueString/value", "v").indexOf(xpath.evalFirst(resource, "/identifier", "v")) > -1) {
+                        newNode.bitmap = filename + "." + xpath.evalFirst(resource, "/format", "v");
+                    }
+                });
+            }
+
             if (newNode.isOutputNode) {
                 var outputBridgeId = xpath.evalFirst(inner, "/compImplementation/compOutputBridge/output", "v");
-                var graphOutputs = xpath.find(rawData, "/graphOutputs/graphoutput");
+                var graphOutputs = xpath.find(graph, "/graphOutputs/graphoutput");
 
                 _.forEach(graphOutputs, graphOutput => {
                     if (xpath.evalFirst(graphOutput, "/uid", "v") == outputBridgeId) {
@@ -124,6 +137,7 @@
             this.inputs = [];
             this.isFilter = false;
             this.isGenerator = false;
+            this.isBitmap = false;
             this.outputs = [];
         }
     }

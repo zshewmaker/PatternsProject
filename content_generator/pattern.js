@@ -30,7 +30,7 @@
         });
 
         _.forEach(xpath.find(rawData, "//package/content/graph"), graph => {
-            createNode(graph, patterns);
+            createNode(graph, patterns, rawData);
         });
 
         return patterns;

@@ -6,9 +6,11 @@
     var substanceProject = "../PatternsProject.sbs";
     var substanceSbsar = "../PatternsProject.sbsar";
     var sbsRenderPath = "D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe";
-    var DesignerNodesPath = "D:\Program Files\Allegorithmic\Substance Designer 5\resources\packages";
+    var designerNodesPath = "D:\Program Files\Allegorithmic\Substance Designer 5\resources\packages";
+    var resourcePath = "../PatternsProject.resources/"
 
     var fs = require('fs'),
+        copy = require('copy'),
         xml2js = require('xml2js'),
         xpath = require('xml2js-xpath'),
         _ = require('lodash'),
@@ -26,6 +28,7 @@
 
             generateImages(imageOutputPath, sbsRenderPath, substanceSbsar);
             fs.writeFile(jsonOutputPath, "var patternsDB = " + JSON.stringify(patterns) + ";");
+            copy(resourcePath + "*.*", imageOutputPath, () => {});
             console.log('Done');
         });
     });

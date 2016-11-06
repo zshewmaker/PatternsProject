@@ -58,6 +58,9 @@
                     {{if isOutputNode}}
                         <img src="generated_images/PatternsProject_Simple_Patterns_{{:outputName}}.png" alt="{{:outputName}}"/>
                     {{/if}}
+                    {{if isBitmap}}
+                        <img src="generated_images/{{:bitmap}}" alt="{{:bitmap}}"/>
+                    {{/if}}
                 </li>
             {{/for}}</ul>
             <br class="clear-all"/>
