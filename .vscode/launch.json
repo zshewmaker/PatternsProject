@@ -5,10 +5,10 @@
             "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}\\patternExporter.js",
+            "program": "${workspaceRoot}\\content_generator\\patternExporter.js",
             "stopOnEntry": false,
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}\\content_generator",
             "preLaunchTask": null,
             "runtimeExecutable": null,
             "runtimeArgs": [

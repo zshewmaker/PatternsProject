@@ -1,6 +1,13 @@
 (function () {
     "use strict";
 
+    var imageOutputPath = "../build_output/generated_images/";
+    var jsonOutputPath = "../build_output/patterns.js";
+    var substanceProject = "../PatternsProject.sbs";
+    var substanceSbsar = "../PatternsProject.sbsar";
+    var sbsRenderPath = "D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe";
+    var DesignerNodesPath = "D:\Program Files\Allegorithmic\Substance Designer 5\resources\packages";
+
     var fs = require('fs'),
         xml2js = require('xml2js'),
         xpath = require('xml2js-xpath'),
@@ -9,22 +16,21 @@
 
     var patterns = [];
 
-    fs.readFile("PatternsProject.sbs", "utf-8", (err, data) => {
+    fs.readFile(substanceProject, "utf-8", (err, data) => {
 
         var parser = new xml2js.Parser();
         parser.parseString(data, (err2, result) => {
-
 
             var root = xpath.evalFirst(result, "//package");
             var graphOutputs = xpath.find(root, "/content/graph/graphOutputs/graphoutput");
 
             // Map comments to Patterns
-            var guiObjects = result.package.content[0].graph[0].GUIObjects[0].GUIObject;
+            var guiObjects = xpath.find(root, "/content/graph/GUIObjects/GUIObject");
 
             _.forEach(guiObjects, inner => {
-                if (inner.type[0].$.v == "COMMENT" && inner.isFrameVisible[0].$.v == 1) {
-                    var position = inner.GUILayout[0].gpos[0].$.v.split(" ");
-                    var size = inner.GUILayout[0].size[0].$.v.split(" ");
+                if (xpath.evalFirst(inner, "/type", "v") == "COMMENT" && xpath.evalFirst(inner, "/isFrameVisible", "v") == 1) {
+                    var position = xpath.evalFirst(inner, "/GUILayout/gpos", "v").split(" ");
+                    var size = xpath.evalFirst(inner, "/GUILayout/size", "v").split(" ");
 
                     var newPattern = new Pattern(
                         xpath.evalFirst(inner, "/uid", "v"),
@@ -41,7 +47,7 @@
             var getNodeId = node => node.uid[0].$.v;
             var getNodeGui = node => node.GUILayout[0];
             var getNodePosition = gui => {
-                var rawPos = gui.gpos[0].$.v.split(" ");
+                var rawPos = xpath.evalFirst(gui, "/gpos", "v").split(" ");
                 return new Vector3(parseFloat(rawPos[0]), parseFloat(rawPos[1]), parseFloat(rawPos[2]));
             };
             var getNodeParameters = node => {
@@ -145,14 +151,14 @@
                 _.forEach(files, file => {
                     fs.unlinkSync("./build_output/generated_images/" + file);
                 });
-                
-                var renderResults = spawnSync("D:/Program Files/Allegorithmic/Substance BatchTools 5/sbsrender.exe",
-                    ["render", "--inputs", "PatternsProject.sbsar", "--output-format", "png", "--output-path", "build_output/generated_images/"]);
+
+                var renderResults = spawnSync(sbsRenderPath,
+                    ["render", "--inputs", substanceSbsar, "--output-format", "png", "--output-path", imageOutputPath]);
                 console.log(`stderr: ${renderResults.stderr.toString()}`);
                 console.log(`stdout: ${renderResults.stdout.toString()}`);
             });
 
-            fs.writeFile("build_output/patterns.js", "var patternsDB = " + JSON.stringify(patterns) + ";");
+            fs.writeFile(jsonOutputPath, "var patternsDB = " + JSON.stringify(patterns) + ";");
             console.log('Done');
         });
     });
