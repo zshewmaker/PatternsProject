@@ -20,8 +20,10 @@
 
             // First pass - getting left most node (refactor with lodash?)
             var leftPositionModifier = 99999;
+            var topPositionModifier = 0;
             _.forEach(pattern.nodes, node => {
-                leftPositionModifier = Math.min(leftPositionModifier, node.position.x - pattern.position.x);
+                leftPositionModifier = Math.min(leftPositionModifier, (node.position.x - pattern.position.x) / 2);
+                // topPositionModifier = Math.min(topPositionModifier, (node.position.y - pattern.position.y) / 4);
             });
 
             var xRatio = $cableCanvas.width() / pattern.size.x; // $cableCanvas.width();
@@ -38,10 +40,10 @@
                     $node.css("width", sizeModifier(128) + "px");
                     $node.css("min-height", sizeModifier(128) + "px");
                     $node.css("left", positionModifier(node.position.x - leftPositionModifier - pattern.position.x) + "px");
-                    $node.css("top", positionModifier(node.position.y - pattern.position.y) + "px");
+                    $node.css("top", positionModifier(node.position.y - topPositionModifier - pattern.position.y) + "px");
                 } else {
                     $node.css("left", positionModifier(node.position.x - leftPositionModifier - pattern.position.x) + "px");
-                    $node.css("top", positionModifier(node.position.y - pattern.position.y) + "px");
+                    $node.css("top", positionModifier(node.position.y - topPositionModifier - pattern.position.y) + "px");
 
                     $node.css("width", sizeModifier(64) + "px");
                     $node.css("min-height", sizeModifier(32) + "px");
