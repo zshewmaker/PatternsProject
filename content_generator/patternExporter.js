@@ -2,6 +2,7 @@
     "use strict";
 
     var imageOutputPath = "../build_output/generated_images/";
+    var resourceOutputPath = "../build_output/resource_images/";
     var jsonOutputPath = "../build_output/patterns.js";
     var substanceProject = "../PatternsProject.sbs";
     var substanceSbsar = "../PatternsProject.sbsar";
@@ -28,7 +29,7 @@
 
             generateImages(imageOutputPath, sbsRenderPath, substanceSbsar);
             fs.writeFile(jsonOutputPath, "var patternsDB = " + JSON.stringify(patterns) + ";");
-            copy(resourcePath + "*.*", imageOutputPath, () => {});
+            copy(resourcePath + "*.*", resourceOutputPath, () => {});
             console.log('Done');
         });
     });
