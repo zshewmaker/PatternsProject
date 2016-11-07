@@ -85,7 +85,7 @@
 
     var patternTemplate = $.templates("#pattern-template");
     var patternList = $(".pattern-list");
-    _.forEach(patternsDB, pattern => {
+    _.forEach(_.sortBy(patternsDB, x => x.name), pattern => {
         patternList.append(patternTemplate.render(pattern));
     });
 
